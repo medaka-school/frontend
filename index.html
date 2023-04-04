@@ -3,27 +3,66 @@
 <head>
   <title>POST Request Example</title>
   <meta charset="UTF-8">
+  <style>
+    /* チャット風のCSS */
+    .chat-container {
+      border: 1px solid #ccc;
+      padding: 10px;
+      height: 300px;
+      overflow-y: scroll;
+    }
+
+    .chat-message {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+      max-width: 70%;
+      word-break: break-all;
+      float: left;
+      clear: both;
+    }
+
+    .chat-response {
+      background-color: #dff0d8;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+      max-width: 70%;
+      word-break: break-all;
+      float: right;
+      clear: both;
+    }
+
+  </style>
 </head>
 <body>
 
-  <form id="myForm"
+  <div class="chat-container">
+    <div class="chat-message">こんにちは！</div>
+    <div class="chat-response">メッセージを送ってね。</div>
+  </div>
+
+  <!-- <form id="myForm"
         method="post">
-    <!-- <label for="name">Name:</label>
+    <label for="name">名前：</label>
     <input type="text"
            id="name"
            name="name"><br><br>
 
-    <label for="email">Email:</label>
+    <label for="email">メールアドレス：</label>
     <input type="email"
            id="email"
            name="email"><br><br> -->
 
-    <label for="message">Message:</label>
-    <textarea id="message"
-              name="message"></textarea><br><br>
+  <label for="message">メッセージ：</label>
+  <textarea id="message"
+            name="message"></textarea><br><br>
 
-    <button type="submit"
-            onclick="submitForm()">Submit</button>
+  <button type="submit"
+          onclick="submitForm()">送信</button>
   </form>
 
   <script>
@@ -33,12 +72,18 @@
       var form = document.getElementById("myForm");
       var xhr = new XMLHttpRequest();
 
-      xhr.open("POST", "http://example.com/api/endpoint", true);
+      xhr.open("POST", "http://localhost:5000/chat", true);
       xhr.setRequestHeader("Content-Type", "application/json");
 
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-          console.log(xhr.responseText);
+          // JSONレスポンスを取得し、表示する
+          var response = JSON.parse(xhr.responseText);
+          var chatContainer = document.querySelector(".chat-container");
+          var chatResponse = document.createElement("div");
+          chatResponse.className = "chat-response";
+          chatResponse.innerText = response.message;
+          chatContainer.appendChild(chatResponse);
         }
       };
 
@@ -49,6 +94,9 @@
       }
       var json = JSON.stringify(data);
       xhr.send(json);
+
+      // フォームをクリアする
+      form.reset();
     }
   </script>
 
